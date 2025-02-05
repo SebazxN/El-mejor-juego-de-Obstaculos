@@ -12,8 +12,8 @@ let gameOver = false;
 let difficulty = 3; // Velocidad inicial de los obstáculos
 
 // Configuración del canvas
-canvas.width = 800;
-canvas.height = 600;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
 // Función para dibujar el jugador
 function drawPlayer() {
@@ -48,12 +48,22 @@ function createObstacle() {
     obstacles.push({x, y: -50, width, height: 20});
 }
 
-// Función para manejar los controles del jugador
-function movePlayer(event) {
+// Función para manejar los controles del jugador con el teclado
+function movePlayerKeyboard(event) {
     if (event.key === "ArrowLeft" && playerX > 0) {
         playerX -= playerSpeed;
     }
     if (event.key === "ArrowRight" && playerX < canvas.width - playerWidth) {
+        playerX += playerSpeed;
+    }
+}
+
+// Función para manejar los controles del jugador con el tacto
+function movePlayerTouch(event) {
+    const touchX = event.changedTouches[0].clientX;
+    if (touchX < canvas.width / 2 && playerX > 0) {
+        playerX -= playerSpeed;
+    } else if (touchX > canvas.width / 2 && playerX < canvas.width - playerWidth) {
         playerX += playerSpeed;
     }
 }
@@ -117,6 +127,16 @@ document.getElementById("restartButton").addEventListener("click", () => {
     resetGame();
 });
 
-window.addEventListener("keydown", movePlayer);
+// Detectar el toque en dispositivos móviles
+canvas.addEventListener("touchstart", movePlayerTouch, false);
+canvas.addEventListener("touchmove", movePlayerTouch, false);
 
-// Comenzar el juego cuando el jugador presione "Iniciar"
+// Detectar las teclas para jugar en dispositivos de escritorio
+window.addEventListener("keydown", movePlayerKeyboard);
+
+// Ajustar el tamaño del canvas al redimensionar la pantalla
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+
