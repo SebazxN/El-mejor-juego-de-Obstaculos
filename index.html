@@ -9,15 +9,52 @@
             margin: 0;
             overflow: hidden;
             background-color: #282c34;
+            font-family: Arial, sans-serif;
         }
         canvas {
             display: block;
             margin: auto;
             background-color: #111;
         }
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        .screen h1 {
+            margin-bottom: 20px;
+        }
+        .screen button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #00FF00;
+            border: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
+    <div id="startScreen" class="screen">
+        <div>
+            <h1>¡Bienvenido al juego!</h1>
+            <button id="startButton">Iniciar Juego</button>
+        </div>
+    </div>
+    <div id="endScreen" class="screen" style="display: none;">
+        <div>
+            <h1>¡Juego Terminado!</h1>
+            <p>Puntuación: <span id="finalScore"></span></p>
+            <button id="restartButton">Reiniciar Juego</button>
+        </div>
+    </div>
     <canvas id="gameCanvas"></canvas>
     <script src="game.js"></script>
 </body>
