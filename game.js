@@ -8,6 +8,8 @@ let playerX = canvas.width / 2 - playerWidth / 2;
 let playerY = canvas.height - playerHeight - 10;
 let obstacles = [];
 let score = 0;
+let gameOver = false;
+let difficulty = 3; // Velocidad inicial de los obstáculos
 
 // Configuración del canvas
 canvas.width = 800;
@@ -31,7 +33,7 @@ function drawObstacles() {
 // Función para mover los obstáculos
 function moveObstacles() {
     for (let i = 0; i < obstacles.length; i++) {
-        obstacles[i].y += 3;
+        obstacles[i].y += difficulty;
         if (obstacles[i].y > canvas.height) {
             obstacles.splice(i, 1);
             score += 10;
@@ -63,8 +65,11 @@ function checkCollisions() {
             playerX + playerWidth > obstacles[i].x &&
             playerY < obstacles[i].y + obstacles[i].height &&
             playerY + playerHeight > obstacles[i].y) {
-            alert("¡Juego Terminado! Tu puntuación es: " + score);
-            resetGame();
+            gameOver = true;
+            document.getElementById("finalScore").textContent = score;
+            document.getElementById("startScreen").style.display = "none";
+            document.getElementById("endScreen").style.display = "flex";
+            return;
         }
     }
 }
@@ -75,10 +80,16 @@ function resetGame() {
     playerY = canvas.height - playerHeight - 10;
     obstacles = [];
     score = 0;
+    difficulty = 3;
+    gameOver = false;
+    document.getElementById("endScreen").style.display = "none";
+    document.getElementById("startScreen").style.display = "flex";
 }
 
 // Función de animación principal
 function gameLoop() {
+    if (gameOver) return;
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     drawPlayer();
@@ -96,8 +107,16 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-// Evento de teclas para mover al jugador
+// Eventos de teclas y botones
+document.getElementById("startButton").addEventListener("click", () => {
+    document.getElementById("startScreen").style.display = "none";
+    gameLoop();
+});
+
+document.getElementById("restartButton").addEventListener("click", () => {
+    resetGame();
+});
+
 window.addEventListener("keydown", movePlayer);
 
-// Comenzar el juego
-gameLoop();
+// Comenzar el juego cuando el jugador presione "Iniciar"
